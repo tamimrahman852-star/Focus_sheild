@@ -2,113 +2,212 @@
 <html lang="bn">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0f172a">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Focus Shield">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>Focus Shield</title>
 <style>
-:root{--bg:#0f172a;--card:#1e293b;--tx:#f1f5f9;--mut:#94a3b8;--ac:#22c55e;--rd:#ef4444}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,sans-serif;padding:16px;max-width:480px;margin:auto}
-h1{font-size:20px;margin:8px 0 16px}
-.card{background:var(--card);border-radius:14px;padding:16px;margin-bottom:14px}
-.time{font-size:64px;font-weight:700;text-align:center;font-variant-numeric:tabular-nums;margin:8px 0}
-input{width:100%;padding:12px;border-radius:10px;border:0;background:#0f172a;color:var(--tx);font-size:16px;margin-bottom:10px}
-.row{display:flex;gap:8px}
-button{flex:1;padding:14px;border:0;border-radius:10px;font-size:16px;font-weight:600;background:var(--ac);color:#04210f}
-button.sec{background:#334155;color:var(--tx)}
-button.bad{background:var(--rd);color:#fff}
-.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center}
-.stats b{display:block;font-size:24px}
-.stats span{color:var(--mut);font-size:12px}
-#quote{color:var(--mut);text-align:center;font-size:14px;min-height:40px}
-.chips button{flex:none;padding:8px 14px;background:#334155;color:var(--tx);font-size:14px}
+:root{--bg:#0b1220;--card:#131c2f;--line:#1f2b45;--tx:#f1f5f9;--mut:#8a98b3;--ac:#22c55e;--ac2:#16a34a;--rd:#ef4444;--r:18px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+body{padding:max(16px,env(safe-area-inset-top)) 16px max(24px,env(safe-area-inset-bottom));max-width:480px;margin:auto;min-height:100vh}
+header{display:flex;align-items:center;justify-content:space-between;margin:4px 0 16px}
+header h1{font-size:18px;margin:0;display:flex;align-items:center;gap:8px;letter-spacing:.2px}
+header img{width:28px;height:28px;border-radius:8px}
+#install{display:none;background:var(--ac);color:#04210f;border:0;border-radius:999px;padding:8px 14px;font-weight:700;font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-bottom:14px}
+.ringwrap{position:relative;width:240px;height:240px;margin:4px auto 14px}
+svg.ring{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:12;stroke-linecap:round}
+.ring .bg{stroke:var(--line)}
+.ring .fg{stroke:var(--ac);transition:stroke-dashoffset .5s linear}
+.center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.time{font-size:54px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:1px}
+.state{color:var(--mut);font-size:13px;margin-top:2px}
+.seg{display:flex;background:#0e1626;border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:12px}
+.seg button{flex:1;background:none;border:0;color:var(--mut);padding:10px;border-radius:9px;font-weight:600;font-size:14px}
+.seg button.on{background:var(--ac);color:#04210f}
+input{width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--line);background:#0e1626;color:var(--tx);font-size:16px;margin-bottom:12px;outline:none}
+input:focus{border-color:var(--ac)}
+.btn{width:100%;padding:15px;border:0;border-radius:14px;font-size:16px;font-weight:700;background:linear-gradient(180deg,var(--ac),var(--ac2));color:#04210f}
+.btn.stop{background:linear-gradient(180deg,#f87171,#dc2626);color:#fff}
+.btn:active{transform:scale(.98)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center}
+.grid b{display:block;font-size:26px}
+.grid span{color:var(--mut);font-size:12px}
+h2{font-size:13px;margin:0 0 12px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;font-weight:600}
+.bars{display:flex;align-items:flex-end;gap:8px;height:90px}
+.bars div{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.bars i{width:100%;background:var(--ac);border-radius:6px 6px 2px 2px;min-height:3px;opacity:.9}
+.bars small{color:var(--mut);font-size:11px}
+.msg{text-align:center;color:#cbd5e1;font-size:15px;line-height:1.5;min-height:46px;margin-bottom:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.two button{padding:14px;border-radius:14px;border:1px solid var(--line);background:#0e1626;color:var(--tx);font-weight:600;font-size:14px}
+.two .urge{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.4);color:#fca5a5}
+.log{list-style:none;margin:0;padding:0}
+.log li{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.log li:last-child{border:0}
+.log span{color:var(--mut)}
+.empty{color:var(--mut);font-size:14px;text-align:center;padding:6px}
+footer{text-align:center;color:var(--mut);font-size:12px;margin-top:8px}
+footer a{color:var(--mut)}
 </style>
 </head>
 <body>
-<h1>🛡️ Focus Shield</h1>
+<header>
+  <h1><img src="icon-192.png" alt="">Focus Shield</h1>
+  <button id="install">Install</button>
+</header>
 
 <div class="card">
-  <div class="time" id="time">25:00</div>
-  <input id="task" placeholder="Ki niye kaj korbe? (e.g. Uninet bug)">
-  <div class="row chips" style="margin-bottom:10px">
-    <button class="sec" onclick="setMin(25)">25</button>
-    <button class="sec" onclick="setMin(45)">45</button>
-    <button class="sec" onclick="setMin(60)">60</button>
+  <div class="ringwrap">
+    <svg class="ring" viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="52"/><circle class="fg" id="fg" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="0"/></svg>
+    <div class="center"><div class="time" id="time">25:00</div><div class="state" id="state">Ready</div></div>
   </div>
-  <div class="row">
-    <button id="go" onclick="toggle()">Start</button>
+  <div class="seg" id="seg">
+    <button data-m="25" class="on">25</button><button data-m="45">45</button><button data-m="60">60</button><button data-m="90">90</button>
   </div>
-</div>
-
-<div class="card stats">
-  <div><b id="sToday">0</b><span>aj (min)</span></div>
-  <div><b id="sTotal">0</b><span>total (ghonta)</span></div>
-  <div><b id="sStreak">0</b><span>clean din</span></div>
+  <input id="task" placeholder="Ki niye kaj korbe? (e.g. Uninet auth bug)" maxlength="60">
+  <button class="btn" id="go">Start Focus</button>
 </div>
 
 <div class="card">
-  <div id="quote"></div>
-  <div class="row" style="margin-top:10px">
-    <button class="bad" onclick="urge()">Urge ashche</button>
-    <button class="sec" onclick="relapse()">Slip korechi</button>
+  <div class="grid">
+    <div><b id="sToday">0</b><span>aj (min)</span></div>
+    <div><b id="sTotal">0</b><span>total (ghonta)</span></div>
+    <div><b id="sStreak">0</b><span>clean din</span></div>
   </div>
 </div>
+
+<div class="card">
+  <h2>Last 7 days</h2>
+  <div class="bars" id="bars"></div>
+</div>
+
+<div class="card">
+  <div class="msg" id="msg">Urge ashle ekhoni "Urge ashche" chapo. Tarpor kaj.</div>
+  <div class="two">
+    <button class="urge" id="urge">Urge ashche</button>
+    <button id="relapse">Slip korechi</button>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Aj-ker sessions</h2>
+  <ul class="log" id="log"></ul>
+</div>
+
+<footer>Data shudhu tomar phone-e save hoy &middot; <a href="#" id="export">Export backup</a></footer>
 
 <script>
 const KEY="focus_shield_v1";
-const day=()=>new Date().toISOString().slice(0,10);
-const load=()=>{try{return JSON.parse(localStorage.getItem(KEY))||fresh()}catch(e){return fresh()}};
-const fresh=()=>({sessions:[],clean_since:day(),relapses:[]});
-const save=d=>{try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}};
-let mins=25,endAt=null,tick=null,startedAt=null;
+const $=id=>document.getElementById(id);
+const dayStr=d=>{const x=new Date(d);return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0")};
+const today=()=>dayStr(Date.now());
+const fresh=()=>({sessions:[],clean_since:today(),relapses:[],run:null});
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY));return d&&d.sessions?d:fresh()}catch(e){return fresh()}}
+function save(d){try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}}
+const C=2*Math.PI*52;
+let mins=25,tick=null,wake=null;
 
-function fmt(s){const m=Math.floor(s/60),x=s%60;return String(m).padStart(2,"0")+":"+String(x).padStart(2,"0")}
-function setMin(m){if(endAt)return;mins=m;document.getElementById("time").textContent=fmt(m*60)}
+const fmt=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+
+function beep(){
+  try{const a=new (window.AudioContext||window.webkitAudioContext)();
+    [0,.35,.7].forEach(t=>{const o=a.createOscillator(),g=a.createGain();o.frequency.value=880;o.connect(g);g.connect(a.destination);
+      g.gain.setValueAtTime(.2,a.currentTime+t);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+t+.3);o.start(a.currentTime+t);o.stop(a.currentTime+t+.3)})}catch(e){}
+  try{navigator.vibrate&&navigator.vibrate([300,150,300,150,300])}catch(e){}
+}
+async function lock(){try{if("wakeLock" in navigator)wake=await navigator.wakeLock.request("screen")}catch(e){}}
+function unlock(){try{wake&&wake.release();wake=null}catch(e){}}
+
+function draw(left,total){
+  $("time").textContent=fmt(left);
+  $("fg").style.strokeDashoffset=C*(1-left/total);
+}
 function render(){
-  const d=load(),t=day();
-  const today=d.sessions.filter(s=>s.date===t).reduce((a,s)=>a+s.minutes,0);
-  const total=d.sessions.reduce((a,s)=>a+s.minutes,0)/60;
-  const streak=Math.floor((new Date(t)-new Date(d.clean_since))/864e5);
-  sToday.textContent=Math.round(today);sTotal.textContent=total.toFixed(1);sStreak.textContent=streak;
+  const d=load(),t=today();
+  const todayMin=d.sessions.filter(s=>s.date===t).reduce((a,s)=>a+s.minutes,0);
+  $("sToday").textContent=Math.round(todayMin);
+  $("sTotal").textContent=(d.sessions.reduce((a,s)=>a+s.minutes,0)/60).toFixed(1);
+  const streak=Math.max(0,Math.round((new Date(t)-new Date(d.clean_since))/864e5));
+  $("sStreak").textContent=streak;
+  // 7-day bars
+  const days=[],names=["Su","Mo","Tu","We","Th","Fr","Sa"];
+  for(let i=6;i>=0;i--){const x=new Date();x.setDate(x.getDate()-i);days.push({k:dayStr(x),n:names[x.getDay()]})}
+  const vals=days.map(x=>d.sessions.filter(s=>s.date===x.k).reduce((a,s)=>a+s.minutes,0));
+  const max=Math.max(60,...vals);
+  $("bars").innerHTML=days.map((x,i)=>`<div><i style="height:${vals[i]/max*100}%"></i><small>${x.n}</small></div>`).join("");
+  const log=d.sessions.filter(s=>s.date===t).slice().reverse();
+  $("log").innerHTML=log.length?log.map(s=>`<li><div>${s.task.replace(/</g,"&lt;")}</div><span>${Math.round(s.minutes)} min ${s.completed?"✓":"(early)"}</span></li>`).join(""):'<div class="empty">Ekhono kono session nai. Prothom ta ekhoni shuru koro.</div>';
+}
+function running(){return load().run}
+function start(){
+  const d=load();
+  d.run={start:Date.now(),end:Date.now()+mins*60000,mins:mins,task:$("task").value.trim()||"Deep work"};
+  save(d);
+  if("Notification" in window&&Notification.permission==="default")Notification.requestPermission();
+  lock();loop();ui();
 }
 function finish(done){
-  clearInterval(tick);tick=null;
-  const used=Math.max(0,Math.round((Date.now()-startedAt)/6000)/10);
-  const d=load();
-  d.sessions.push({date:day(),task:task.value||"Deep work",minutes:done?mins:used,completed:done});
-  save(d);endAt=null;go.textContent="Start";go.className="";
-  document.getElementById("time").textContent=fmt(mins*60);
-  if(done){try{navigator.vibrate&&navigator.vibrate([300,150,300])}catch(e){}quote.textContent="Session shesh. 5 minute break nao, tarpor abar."}
-  render();
+  const d=load();const r=d.run;if(!r)return;
+  clearInterval(tick);tick=null;unlock();
+  const used=Math.min(r.mins,(Date.now()-r.start)/60000);
+  d.sessions.push({date:dayStr(r.start),task:r.task,minutes:done?r.mins:Math.round(used*10)/10,completed:done});
+  d.run=null;save(d);
+  if(done){beep();$("msg").textContent="Session shesh. 5 minute break, pani khao, tarpor abar shuru koro.";
+    try{if(Notification.permission==="granted")navigator.serviceWorker.ready.then(g=>g.showNotification("Focus Shield","Session shesh! Break nao.",{icon:"icon-192.png",vibrate:[200,100,200]}))}catch(e){}}
+  document.title="Focus Shield";ui();render();
 }
-function toggle(){
-  if(endAt){finish(false);return}
-  startedAt=Date.now();endAt=startedAt+mins*60000;go.textContent="Stop";go.className="bad";
-  if("Notification" in window&&Notification.permission==="default")Notification.requestPermission();
-  tick=setInterval(()=>{
-    const left=Math.round((endAt-Date.now())/1000);
-    if(left<=0){finish(true);try{new Notification("Focus Shield","Session shesh!")}catch(e){}return}
-    document.getElementById("time").textContent=fmt(left);document.title=fmt(left)+" • Focus";
-  },500);
+function loop(){
+  clearInterval(tick);
+  const step=()=>{const r=running();if(!r){clearInterval(tick);return}
+    const left=Math.ceil((r.end-Date.now())/1000);
+    if(left<=0){finish(true);return}
+    draw(left,r.mins*60);document.title=fmt(left)+" · Focus";};
+  step();tick=setInterval(step,500);
 }
-const Q=[
-"Ekhoni phone rekhe code editor kholo. 25 minute. Shudhu eta.",
-"Urge 10 minute-e chole jay. Tumi ta cholte dao, tar upor kaj koro.",
+function ui(){
+  const r=running();
+  $("go").textContent=r?"Stop":"Start Focus";$("go").className="btn"+(r?" stop":"");
+  $("state").textContent=r?r.task:"Ready";
+  $("task").disabled=!!r;
+  document.querySelectorAll("#seg button").forEach(b=>b.disabled=!!r);
+  if(!r)draw(mins*60,mins*60);
+}
+$("go").onclick=()=>running()?finish(false):start();
+$("seg").onclick=e=>{const b=e.target.closest("button");if(!b||running())return;
+  mins=+b.dataset.m;document.querySelectorAll("#seg button").forEach(x=>x.classList.toggle("on",x===b));draw(mins*60,mins*60)};
+const Q=["Ekhoni phone rekhe code editor kholo. 25 minute, shudhu eta.",
+"Urge 10 minute-e chole jay. Tumi ta cholte dao, nijer kaj-e mon dao.",
 "Abbu-Amma tomar upor ashay ache. Aj-ker 25 minute oder jonno.",
-"Thanda pani khao, uthe dar-o, 20 ta pushup koro, tarpor timer shuru koro.",
-"Admission-er rank ekhon baniye hoy. Aj ja korbe, ota-i tomar bhobishyot."
-];
-function urge(){quote.textContent=Q[Math.floor(Math.random()*Q.length)];if(!endAt){setMin(25);toggle()}}
-function relapse(){
-  if(!confirm("Streak reset hobe. Nijeke shasti na diye aage barhar jonno log korbe?"))return;
-  const d=load();d.relapses.push(day());d.clean_since=day();save(d);
-  quote.textContent="Logged. Shame na, shikho. Ekhoni 25 minute kaj koro.";render();
-}
-const {task,go,quote,sToday,sTotal,sStreak}=Object.fromEntries(["task","go","quote","sToday","sTotal","sStreak"].map(i=>[i,document.getElementById(i)]));
-render();
+"Thanda pani khao, uthe dar-o, 20 ta pushup koro, tarpor kaj.",
+"Admission-er rank ekhon baniye hoy. Aj ja korbe, ota-i tomar bhobishyot.",
+"Tumi ekta developer. Ekhon Uninet ba TMK Exam Hub-er ekta bug fix koro."];
+$("urge").onclick=()=>{$("msg").textContent=Q[Math.floor(Math.random()*Q.length)];
+  try{navigator.vibrate&&navigator.vibrate(120)}catch(e){}
+  if(!running()){mins=25;document.querySelectorAll("#seg button").forEach(x=>x.classList.toggle("on",x.dataset.m==="25"));start()}};
+$("relapse").onclick=()=>{
+  if(!confirm("Streak reset hobe. Shasti na diye, shikhar jonno log korbe?"))return;
+  const d=load();d.relapses.push(today());d.clean_since=today();save(d);
+  $("msg").textContent="Logged. Shame na, shikho. Ekhoni 25 minute kaj koro.";render()};
+$("export").onclick=e=>{e.preventDefault();const b=new Blob([JSON.stringify(load(),null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="focus-shield-backup.json";a.click()};
+
+let dp=null;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();dp=e;$("install").style.display="block"});
+$("install").onclick=async()=>{if(!dp)return;dp.prompt();await dp.userChoice;dp=null;$("install").style.display="none"};
+window.addEventListener("appinstalled",()=>$("install").style.display="none");
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&running()){lock();loop()}});
+
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+render();ui();if(running())loop();
 </script>
 </body>
 </html>
