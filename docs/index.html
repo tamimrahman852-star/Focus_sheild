@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+<title>Focus Shield</title>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--tx:#f1f5f9;--mut:#94a3b8;--ac:#22c55e;--rd:#ef4444}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,sans-serif;padding:16px;max-width:480px;margin:auto}
+h1{font-size:20px;margin:8px 0 16px}
+.card{background:var(--card);border-radius:14px;padding:16px;margin-bottom:14px}
+.time{font-size:64px;font-weight:700;text-align:center;font-variant-numeric:tabular-nums;margin:8px 0}
+input{width:100%;padding:12px;border-radius:10px;border:0;background:#0f172a;color:var(--tx);font-size:16px;margin-bottom:10px}
+.row{display:flex;gap:8px}
+button{flex:1;padding:14px;border:0;border-radius:10px;font-size:16px;font-weight:600;background:var(--ac);color:#04210f}
+button.sec{background:#334155;color:var(--tx)}
+button.bad{background:var(--rd);color:#fff}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center}
+.stats b{display:block;font-size:24px}
+.stats span{color:var(--mut);font-size:12px}
+#quote{color:var(--mut);text-align:center;font-size:14px;min-height:40px}
+.chips button{flex:none;padding:8px 14px;background:#334155;color:var(--tx);font-size:14px}
+</style>
+</head>
+<body>
+<h1>🛡️ Focus Shield</h1>
+
+<div class="card">
+  <div class="time" id="time">25:00</div>
+  <input id="task" placeholder="Ki niye kaj korbe? (e.g. Uninet bug)">
+  <div class="row chips" style="margin-bottom:10px">
+    <button class="sec" onclick="setMin(25)">25</button>
+    <button class="sec" onclick="setMin(45)">45</button>
+    <button class="sec" onclick="setMin(60)">60</button>
+  </div>
+  <div class="row">
+    <button id="go" onclick="toggle()">Start</button>
+  </div>
+</div>
+
+<div class="card stats">
+  <div><b id="sToday">0</b><span>aj (min)</span></div>
+  <div><b id="sTotal">0</b><span>total (ghonta)</span></div>
+  <div><b id="sStreak">0</b><span>clean din</span></div>
+</div>
+
+<div class="card">
+  <div id="quote"></div>
+  <div class="row" style="margin-top:10px">
+    <button class="bad" onclick="urge()">Urge ashche</button>
+    <button class="sec" onclick="relapse()">Slip korechi</button>
+  </div>
+</div>
+
+<script>
+const KEY="focus_shield_v1";
+const day=()=>new Date().toISOString().slice(0,10);
+const load=()=>{try{return JSON.parse(localStorage.getItem(KEY))||fresh()}catch(e){return fresh()}};
+const fresh=()=>({sessions:[],clean_since:day(),relapses:[]});
+const save=d=>{try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}};
+let mins=25,endAt=null,tick=null,startedAt=null;
+
+function fmt(s){const m=Math.floor(s/60),x=s%60;return String(m).padStart(2,"0")+":"+String(x).padStart(2,"0")}
+function setMin(m){if(endAt)return;mins=m;document.getElementById("time").textContent=fmt(m*60)}
+function render(){
+  const d=load(),t=day();
+  const today=d.sessions.filter(s=>s.date===t).reduce((a,s)=>a+s.minutes,0);
+  const total=d.sessions.reduce((a,s)=>a+s.minutes,0)/60;
+  const streak=Math.floor((new Date(t)-new Date(d.clean_since))/864e5);
+  sToday.textContent=Math.round(today);sTotal.textContent=total.toFixed(1);sStreak.textContent=streak;
+}
+function finish(done){
+  clearInterval(tick);tick=null;
+  const used=Math.max(0,Math.round((Date.now()-startedAt)/6000)/10);
+  const d=load();
+  d.sessions.push({date:day(),task:task.value||"Deep work",minutes:done?mins:used,completed:done});
+  save(d);endAt=null;go.textContent="Start";go.className="";
+  document.getElementById("time").textContent=fmt(mins*60);
+  if(done){try{navigator.vibrate&&navigator.vibrate([300,150,300])}catch(e){}quote.textContent="Session shesh. 5 minute break nao, tarpor abar."}
+  render();
+}
+function toggle(){
+  if(endAt){finish(false);return}
+  startedAt=Date.now();endAt=startedAt+mins*60000;go.textContent="Stop";go.className="bad";
+  if("Notification" in window&&Notification.permission==="default")Notification.requestPermission();
+  tick=setInterval(()=>{
+    const left=Math.round((endAt-Date.now())/1000);
+    if(left<=0){finish(true);try{new Notification("Focus Shield","Session shesh!")}catch(e){}return}
+    document.getElementById("time").textContent=fmt(left);document.title=fmt(left)+" • Focus";
+  },500);
+}
+const Q=[
+"Ekhoni phone rekhe code editor kholo. 25 minute. Shudhu eta.",
+"Urge 10 minute-e chole jay. Tumi ta cholte dao, tar upor kaj koro.",
+"Abbu-Amma tomar upor ashay ache. Aj-ker 25 minute oder jonno.",
+"Thanda pani khao, uthe dar-o, 20 ta pushup koro, tarpor timer shuru koro.",
+"Admission-er rank ekhon baniye hoy. Aj ja korbe, ota-i tomar bhobishyot."
+];
+function urge(){quote.textContent=Q[Math.floor(Math.random()*Q.length)];if(!endAt){setMin(25);toggle()}}
+function relapse(){
+  if(!confirm("Streak reset hobe. Nijeke shasti na diye aage barhar jonno log korbe?"))return;
+  const d=load();d.relapses.push(day());d.clean_since=day();save(d);
+  quote.textContent="Logged. Shame na, shikho. Ekhoni 25 minute kaj koro.";render();
+}
+const {task,go,quote,sToday,sTotal,sStreak}=Object.fromEntries(["task","go","quote","sToday","sTotal","sStreak"].map(i=>[i,document.getElementById(i)]));
+render();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>

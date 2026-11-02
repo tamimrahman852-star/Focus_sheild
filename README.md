@@ -15,3 +15,7 @@ Edit `blocklist_distractions.txt` and `blocklist_adult.txt` to change what gets 
 No external dependencies, Python 3.8+.
 
 Note: the hosts-file block is easy to undo, so pair it with a router/DNS filter (e.g. CleanBrowsing) for stronger protection.
+
+## Phone / web version (no install)
+Open the hosted page in your phone browser: https://tamimrahman852-star.github.io/Focus_sheild/
+Chrome menu -> "Add to Home Screen" to use it like an app. Timer, streak and stats are saved in the browser (offline too).
