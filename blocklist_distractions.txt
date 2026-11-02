@@ -1,0 +1,9 @@
+# One domain per line. Edit freely.
+facebook.com
+instagram.com
+youtube.com
+tiktok.com
+twitter.com
+x.com
+reddit.com
+9gag.com
